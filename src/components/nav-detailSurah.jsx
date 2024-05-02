@@ -12,7 +12,11 @@ export default function NavDetailSurah({ namaSurah }) {
           <MdKeyboardArrowLeft size={25} fill="white" />
         </div>
         <div className="w-full h-max text-center ">
-          <h1 className="font-bold text-[1.5rem]">{namaSurah}</h1>
+          {namaSurah ? (
+            <h1 className="font-bold text-[1.5rem]">{namaSurah}</h1>
+          ) : (
+            <div className="w-[100px] h-[20px] rounded-xl m-auto bg-white animate-pulse"></div>
+          )}
         </div>
       </div>
     </div>
