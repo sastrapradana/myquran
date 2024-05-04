@@ -18,10 +18,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/surah" element={<Surah />} />
-          <Route path="/surah/:nomor" element={<Surah />} />
+          <Route path="/surah/:id" element={<Surah />} />
           <Route path="/detail-surah/:nomor" element={<DetailSurah />} />
 
           <Route path="/doa" element={<Doa />} />
+          <Route path="/doa/:id" element={<Doa />} />
         </Routes>
       </React.StrictMode>
     </BrowserRouter>

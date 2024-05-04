@@ -75,7 +75,7 @@ export default function App() {
             <div className="w-full h-max flex justify-between ">
               <div
                 className="w-[45%] h-[170px] border rounded-3xl bg-[#0080804b] flex flex-col justify-center gap-3 p-3"
-                onClick={() => navigate("/surah")}
+                onClick={() => navigate("/surah/1")}
               >
                 <img
                   src="/alquran.png"
@@ -94,7 +94,7 @@ export default function App() {
               </div>
               <div
                 className="w-[45%] h-[150px] border rounded-3xl bg-[#da19832a] flex flex-col justify-center gap-3 p-3"
-                onClick={() => navigate("/doa")}
+                onClick={() => navigate("/doa/1")}
               >
                 <img
                   src="/berdoa.png"

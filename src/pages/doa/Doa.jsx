@@ -2,28 +2,22 @@ import { useEffect, useState } from "react";
 import NavLink from "../../components/navLink";
 import { FiSearch } from "react-icons/fi";
 import { useDataDoa } from "../../services/useDoaQuery";
+import Pagination from "../../components/pagination";
+import { useParams } from "react-router-dom";
 // import { getAllDoa } from "../../services/useApi";
 
 export default function Doa() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const { id } = useParams();
 
   const { data: dataDoa, isPending } = useDataDoa();
-
-  console.log({ dataDoa, isPending });
-
-  const getDoa = () => {
-    if (!isPending) {
-      const sliceData = dataDoa.slice(0, 10);
-      setData(sliceData);
-    }
-  };
 
   const SkeletonCard = () => {
     return (
       <div
         role="status"
-        className="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
+        className="flex items-center justify-center h-56 w-full bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700"
       >
         <svg
           className="w-10 h-10 text-gray-200 dark:text-gray-600"
@@ -40,8 +34,15 @@ export default function Doa() {
     );
   };
 
+  const handlePageChange = (page) => {
+    if (dataDoa) {
+      const sliceData = dataDoa.slice((page - 1) * 10, page * 10);
+      setData(sliceData);
+    }
+  };
+
   useEffect(() => {
-    getDoa();
+    handlePageChange(id);
   }, [dataDoa]);
 
   return (
@@ -54,7 +55,7 @@ export default function Doa() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full text-[.9rem] h-[45px] px-4 rounded-3xl border outline-none focus:border-2 focus:border-gray-400 bg-transparent text-white"
-            placeholder="Cari"
+            placeholder="Cari doamu disini..."
           />
           <FiSearch
             size={20}
@@ -63,20 +64,30 @@ export default function Doa() {
         </div>
       </div>
       <div className="w-full h-max mt-6 mb-6">
-        <div className="w-[90%] h-max mx-auto flex flex-col items-center justify-between  gap-4">
+        <div className="w-[90%] h-max mx-auto flex flex-col items-center justify-between  gap-5">
           {data.length > 0 ? (
             data.map((item, index) => (
               <div
-                className="w-full min-h-[50px] max-h-max rounded-2xl bg-[#2be6794f] shadow-xl flex items-center gap-5 p-3"
+                className="w-full h-max border p-2 rounded-xl shadow-xl bg-[#2ed34a2d]"
                 key={index}
               >
-                <div className="w-max h-full">
-                  <p className="text-[1] text-yellow-500 font-medium">
-                    {item.id}.
+                <div className="w-full h-max">
+                  <p>
+                    {item.id}. {item.judul}
                   </p>
                 </div>
-                <div className="w-max h-full ">
-                  <p className=" font-semibold">{item.judul}</p>
+                <div className="w-full h-max flex items-end   flex-col mt-6">
+                  <h1 className="text-[1.5rem] text-yellow-500 font-semibold text-end">
+                    {item.arab}
+                  </h1>
+                  <p className="text-[.8rem] italic text-gray-300 text-end">
+                    {item.latin}
+                  </p>
+                </div>
+                <div className="w-full h-max mt-4">
+                  <p className="text-[.9rem] italic">
+                    &quot;{item.terjemah}.&quot;
+                  </p>
                 </div>
               </div>
             ))
@@ -85,6 +96,14 @@ export default function Doa() {
           )}
         </div>
       </div>
+      {!isPending && (
+        <Pagination
+          totalItems={dataDoa.length}
+          itemsPerPage={10}
+          onPageChange={handlePageChange}
+          title={"doa"}
+        />
+      )}
     </div>
   );
 }

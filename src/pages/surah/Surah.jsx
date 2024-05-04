@@ -5,11 +5,12 @@ import { useDataSurah } from "../../services/useSurahQuery";
 import Pagination from "../../components/pagination";
 import { useDebounce } from "use-debounce";
 import NavLink from "../../components/navLink";
+import { createCookies } from "../../utils/utils";
 export default function Surah() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
 
-  const { nomor } = useParams();
+  const { id } = useParams();
 
   const { data: dataSurah, isPending } = useDataSurah();
 
@@ -57,17 +58,18 @@ export default function Surah() {
     setData(filterData);
   };
 
+  const handleNavigate = (nomor) => {
+    navigate(`/detail-surah/${nomor}`);
+    createCookies("nomor", id);
+  };
+
   useEffect(() => {
     if (debouncedValue.length > 0) {
       getDataSearch();
     } else {
-      if (nomor) {
-        handlePageChange(nomor);
-      } else {
-        handlePageChange(1);
-      }
+      handlePageChange(id);
     }
-  }, [debouncedValue, nomor, dataSurah]);
+  }, [debouncedValue, id, dataSurah]);
 
   return (
     <div className="w-full min-h-[100vh] max-h-max">
@@ -96,7 +98,7 @@ export default function Surah() {
               <div
                 className="w-full h-max p-3 shadow-md bg-[#ffffff63] rounded-2xl backdrop-blur-lg flex justify-between items-center"
                 key={index}
-                onClick={() => navigate(`/detail-surah/${item.nomor}`)}
+                onClick={() => handleNavigate(item.nomor)}
               >
                 <div className="w-max h-max flex items-center gap-4">
                   <div className="w-[50px] relative h-[50px] border flex justify-center items-center rounded-full">
@@ -130,6 +132,7 @@ export default function Surah() {
             totalItems={dataSurah.data.length}
             itemsPerPage={10}
             onPageChange={handlePageChange}
+            title={"surah"}
           />
         )}
       </div>

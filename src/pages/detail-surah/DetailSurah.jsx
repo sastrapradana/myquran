@@ -4,6 +4,7 @@ import NavDetailSurah from "../../components/nav-detailSurah";
 import { getAllSurahByNomor } from "../../services/useApi";
 import { useEffect, useState } from "react";
 import AudioPlayer from "../../components/audio-player";
+import { getCookies } from "../../utils/utils";
 
 export default function DetailSurah() {
   const [qory, setQory] = useState("");
@@ -11,6 +12,10 @@ export default function DetailSurah() {
   const [urlFull, setUrlFull] = useState("");
   const [data, setData] = useState(null);
   const { nomor } = useParams();
+
+  const page = getCookies("nomor");
+
+  console.log({ page });
 
   const getDetailSurah = async () => {
     if (!nomor) return;
@@ -72,7 +77,7 @@ export default function DetailSurah() {
 
   return (
     <div className="w-full min-h-[100vh] max-h-max">
-      <NavDetailSurah namaSurah={data && data.nama} />
+      <NavDetailSurah namaSurah={data && data.nama} nomorPage={page} />
       {data ? (
         <div className="w-full h-max pt-[100px]">
           <div className="w-[90%] h-[180px] m-auto ring-1 ring-slate-400 shadow-xl shadow-[#ffffff3d] rounded-2xl relative">
