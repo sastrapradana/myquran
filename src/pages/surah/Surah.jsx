@@ -1,10 +1,10 @@
 import { FiSearch } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import NavSurah from "../../components/nav-surah";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDataSurah } from "../../services/useSurahQuery";
 import Pagination from "../../components/pagination";
 import { useDebounce } from "use-debounce";
+import NavLink from "../../components/navLink";
 export default function Surah() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
@@ -69,12 +69,9 @@ export default function Surah() {
     }
   }, [debouncedValue, nomor, dataSurah]);
 
-  console.log({ nomor, dataSurah, data, isPending });
-  console.log(debouncedValue.length);
-
   return (
     <div className="w-full min-h-[100vh] max-h-max">
-      <NavSurah />
+      <NavLink title="Surah" />
       <div className="w-full h-max pt-[100px]">
         <div className="w-[90%] h-max mx-auto relative">
           <input

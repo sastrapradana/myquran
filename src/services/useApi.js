@@ -1,8 +1,9 @@
-const BASE_URL = "https://equran.id/api/v2";
+const BASE_URL_QURAN = "https://equran.id/api/v2";
+const BASE_URL_DOA = "https://open-api.my.id/api/doa";
 
 export const getAllSurahApi = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/surat`);
+    const res = await fetch(`${BASE_URL_QURAN}/surat`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -12,7 +13,27 @@ export const getAllSurahApi = async () => {
 
 export const getAllSurahByNomor = async (nomor) => {
   try {
-    const res = await fetch(`${BASE_URL}/surat/${nomor}`);
+    const res = await fetch(`${BASE_URL_QURAN}/surat/${nomor}`);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllDoa = async () => {
+  try {
+    const res = await fetch(`${BASE_URL_DOA}`);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDoaById = async (id) => {
+  try {
+    const res = await fetch(`${BASE_URL_DOA}/${id}`);
     const data = await res.json();
     return data;
   } catch (error) {

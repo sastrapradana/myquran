@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { GoHome } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
-export default function NavSurah() {
+export default function NavLink({ title }) {
   const navigate = useNavigate();
 
   return (
@@ -11,7 +12,7 @@ export default function NavSurah() {
           <GoHome size={25} fill="white" />
         </div>
         <div className="w-full h-max text-center ">
-          <h1 className="font-bold text-[1.1rem]">Surah</h1>
+          <h1 className="font-bold text-[1.1rem]">{title}</h1>
         </div>
       </div>
     </div>

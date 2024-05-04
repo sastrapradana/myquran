@@ -92,7 +92,10 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <div className="w-[45%] h-[150px] border rounded-3xl bg-[#da19832a] flex flex-col justify-center gap-3 p-3">
+              <div
+                className="w-[45%] h-[150px] border rounded-3xl bg-[#da19832a] flex flex-col justify-center gap-3 p-3"
+                onClick={() => navigate("/doa")}
+              >
                 <img
                   src="/berdoa.png"
                   alt="alquran"

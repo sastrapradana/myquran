@@ -19,8 +19,6 @@ export default function AudioPlayer({ audioSrc }) {
     setIsPlaying(false);
   };
 
-  console.log({ audioSrc });
-
   return (
     <div>
       <button onClick={togglePlayPause}>
