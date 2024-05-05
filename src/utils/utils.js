@@ -6,6 +6,16 @@ export function formatTime(time) {
   return `${hours}:${minutes}`;
 }
 
+export function formatDate(date) {
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return date.toLocaleDateString("id-ID", options);
+}
+
 export const createCookies = (name, value) => {
   Cookies.set(name, value, { expires: 7 });
 };

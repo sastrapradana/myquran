@@ -2,13 +2,65 @@ import { useNavigate } from "react-router-dom";
 import "./App.css";
 import NavHome from "./components/nav-home";
 import useRealTime from "./hooks/useRealTime";
-import { formatTime } from "./utils/utils";
+import { formatDate, formatTime } from "./utils/utils";
+import { useEffect, useState } from "react";
+import { useJadwalSholat } from "./services/useAdzanQuery";
 
 export default function App() {
+  const [waktuSholat, setWaktuSholat] = useState(undefined);
   const navigate = useNavigate();
 
   const [time] = useRealTime();
   console.log({ time });
+  const date = formatDate(time);
+  const bulan = (time.getMonth() + 1).toString().padStart(2, "0");
+  const tanggal = time.getDate().toString().padStart(2, "0");
+
+  const { data: jadwalSholat } = useJadwalSholat("lubukpakam", "2023", bulan);
+
+  const getJadwalSholatHariIni = (waktu) => {
+    const filterData = jadwalSholat.filter((obj) => obj.tanggal == waktu);
+
+    const waktuSekarang = formatTime(time);
+
+    if (filterData.length === 0) {
+      return;
+    }
+
+    const waktuTerdekat = filterData[0];
+
+    const waktuObj = Object.keys(waktuTerdekat).filter(
+      (key) => key !== "tanggal"
+    );
+    const waktuTerdekatObj = waktuObj.reduce(
+      (terdekatObj, waktu) => {
+        const [jam, menit] = waktuTerdekat[waktu].split(":").map(Number);
+        const [jamSekarang, menitSekarang] = waktuSekarang
+          .split(":")
+          .map(Number);
+        const selisihWaktu = Math.abs(
+          jam * 60 + menit - (jamSekarang * 60 + menitSekarang)
+        );
+        if (selisihWaktu < terdekatObj.selisih) {
+          return {
+            waktu: waktu,
+            jam: waktuTerdekat[waktu],
+            selisih: selisihWaktu,
+          };
+        }
+        return terdekatObj;
+      },
+      { waktu: "", jam: "", selisih: Infinity }
+    );
+
+    setWaktuSholat(waktuTerdekatObj);
+  };
+
+  useEffect(() => {
+    if (jadwalSholat) {
+      getJadwalSholatHariIni(`2023-${bulan}-${tanggal}`);
+    }
+  }, [jadwalSholat, time]);
 
   return (
     <div className="w-full min-h-[100vh] max-h-max relative">
@@ -25,11 +77,19 @@ export default function App() {
           <div className="w-full h-[300px] right-0 absolute top-0 left-0 flex justify-center items-center text-white">
             <div className="w-[90%] h-full pt-[100px] flex flex-col items-center">
               <div className="w-max h-max text-center">
-                <h1 className="font-bold text-[2.3rem] tracking-[2px] -mb-2">
-                  {formatTime(time)}
-                </h1>
+                {jadwalSholat ? (
+                  jadwalSholat.tanggal == formatTime(time) ? (
+                    <h1 className="font-bold text-[2.3rem] text-yellow-500 animate-pulse tracking-[2px] -mb-2">
+                      {formatTime(time)}
+                    </h1>
+                  ) : (
+                    <h1 className="font-bold text-[2.3rem] tracking-[2px] -mb-2">
+                      {formatTime(time)}
+                    </h1>
+                  )
+                ) : null}
                 <p className="text-[.9rem] font-semibold text-gray-200">
-                  Kamis, 18 Maret 2023
+                  {date}
                 </p>
               </div>
               <div className="w-full h-[100%] flex flex-col justify-end pb-3">
@@ -39,12 +99,16 @@ export default function App() {
                   </p>
                 </div>
                 <div className="w-full h-max flex justify-between items-center">
-                  <h1 className="text-[1.3rem] text-yellow-500 font-bold">
-                    Shubuh,{" "}
-                    <span className="text-white font-medium text-[1.1rem]">
-                      04:20
-                    </span>
-                  </h1>
+                  {waktuSholat ? (
+                    <h1 className="text-[1.3rem] capitalize tracking-[1px] text-yellow-500  font-bold">
+                      {waktuSholat.waktu},
+                      <span className="text-white font-medium text-[1.1rem]">
+                        {waktuSholat.jam}
+                      </span>
+                    </h1>
+                  ) : (
+                    <span className="h-[20px] rounded-xl w-[100px] border animate-pulse bg-gray-300"></span>
+                  )}
                   <p className="capitalize text-gray-300">medan</p>
                 </div>
               </div>
