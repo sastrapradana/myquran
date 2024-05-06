@@ -18,6 +18,20 @@ body {
   backdrop-filter: blur(5px);
 }
 
+@layer components {
+  .container {
+    @apply w-full h-max;
+  }
+
+  .center-row {
+    @apply flex justify-center items-center;
+  }
+
+  .center-col {
+    @apply flex flex-col justify-center;
+  }
+}
+
 /*   background: rgb(152, 208, 210);
   background: radial-gradient(
     circle,

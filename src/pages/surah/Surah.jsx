@@ -58,9 +58,18 @@ export default function Surah() {
     setData(filterData);
   };
 
-  const handleNavigate = (nomor) => {
-    navigate(`/detail-surah/${nomor}`);
+  const handleNavigate = (...data) => {
+    navigate(`/detail-surah/${data[0]}`);
     createCookies("nomor", id);
+
+    const dataSurah = {
+      nomor: data[0],
+      nama: data[1],
+      namaLatin: data[2],
+      jumlahAyat: data[3],
+    };
+
+    createCookies("surah-dibaca", JSON.stringify(dataSurah));
   };
 
   useEffect(() => {
@@ -98,7 +107,14 @@ export default function Surah() {
               <div
                 className="w-full h-max p-3 shadow-md bg-[#ffffff63] rounded-2xl backdrop-blur-lg flex justify-between items-center"
                 key={index}
-                onClick={() => handleNavigate(item.nomor)}
+                onClick={() =>
+                  handleNavigate(
+                    item.nomor,
+                    item.nama,
+                    item.namaLatin,
+                    item.jumlahAyat
+                  )
+                }
               >
                 <div className="w-max h-max flex items-center gap-4">
                   <div className="w-[50px] relative h-[50px] border flex justify-center items-center rounded-full">
