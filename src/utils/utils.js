@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-import { json } from "react-router-dom";
 
 export function formatTime(time) {
   const hours = time.getHours().toString().padStart(2, "0");
@@ -25,6 +24,15 @@ export const getCookies = (name) => {
   const dataString = Cookies.get(name);
   if (dataString) {
     const data = JSON.parse(dataString);
+    return data;
+  }
+
+  return null;
+};
+
+export const getCookiesName = (name) => {
+  const data = Cookies.get(name);
+  if (data) {
     return data;
   }
 

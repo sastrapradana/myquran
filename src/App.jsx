@@ -7,6 +7,7 @@ import {
   formatDate,
   formatTime,
   getCookies,
+  getCookiesName,
 } from "./utils/utils";
 import { useEffect, useState } from "react";
 import { useJadwalSholat } from "./services/useAdzanQuery";
@@ -16,13 +17,14 @@ export default function App() {
   const navigate = useNavigate();
 
   const surahDibaca = getCookies("surah-dibaca");
+  const kotaUser = getCookiesName("kota");
 
   const [time] = useRealTime();
   const date = formatDate(time);
   const bulan = (time.getMonth() + 1).toString().padStart(2, "0");
   const tanggal = time.getDate().toString().padStart(2, "0");
 
-  const { data: jadwalSholat } = useJadwalSholat("lubukpakam", "2023", bulan);
+  const { data: jadwalSholat } = useJadwalSholat("2023", bulan);
 
   const getJadwalSholatHariIni = (waktu) => {
     const filterData = jadwalSholat.filter((obj) => obj.tanggal == waktu);
@@ -101,7 +103,9 @@ export default function App() {
                   ) : (
                     <span className="h-[20px] rounded-xl w-[100px] border animate-pulse bg-gray-300"></span>
                   )}
-                  <p className="capitalize text-gray-300">medan</p>
+                  <p className="capitalize text-gray-300">
+                    {kotaUser ? kotaUser : "medan"}
+                  </p>
                 </div>
               </div>
             </div>

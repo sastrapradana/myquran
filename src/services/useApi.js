@@ -1,7 +1,7 @@
 const BASE_URL_QURAN = "https://equran.id/api/v2";
 const BASE_URL_DOA = "https://open-api.my.id/api/doa";
 const BASE_URL_ADZAN =
-  "https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master/adzan";
+  "https://raw.githubusercontent.com/lakuapik/jadwalsholatorg/master";
 
 export const getAllSurahApi = async () => {
   try {
@@ -45,7 +45,19 @@ export const getDoaById = async (id) => {
 
 export const getJadwalSholat = async (kota, tahun, bulan) => {
   try {
-    const res = await fetch(`${BASE_URL_ADZAN}/${kota}/${tahun}/${bulan}.json`);
+    const res = await fetch(
+      `${BASE_URL_ADZAN}/adzan/${kota}/${tahun}/${bulan}.json`
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log({ error });
+  }
+};
+
+export const getKota = async () => {
+  try {
+    const res = await fetch(`${BASE_URL_ADZAN}/kota.json`);
     const data = await res.json();
     return data;
   } catch (error) {
