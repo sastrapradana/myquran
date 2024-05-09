@@ -15,8 +15,6 @@ export default function DetailSurah() {
 
   const page = getCookies("nomor");
 
-  console.log({ page });
-
   const getDetailSurah = async () => {
     if (!nomor) return;
     const res = await getAllSurahByNomor(nomor);

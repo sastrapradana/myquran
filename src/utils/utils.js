@@ -60,13 +60,18 @@ export function cariWaktuAkanDatang(waktuSekarang, data) {
     }
   }
 
-  // console.log({ waktuAkanDatang });
-  // console.log(data);
+  // console.log({ waktuAkanDatang }, "dari utils");
+  // console.log(data[0][waktuAkanDatang], "dari utils");
 
   if (waktuAkanDatang === null) {
     waktuAkanDatang = {
       waktu: waktuObj[1],
       jam: data[0][waktuObj[1]],
+    };
+  } else {
+    waktuAkanDatang = {
+      waktu: waktuAkanDatang,
+      jam: data[0][waktuAkanDatang],
     };
   }
 

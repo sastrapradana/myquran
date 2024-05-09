@@ -6,6 +6,8 @@ import Pagination from "../../components/pagination";
 import { useParams } from "react-router-dom";
 import SkeletonDoa from "../../components/skeleton-doa";
 import { useDebounce } from "use-debounce";
+
+import CardDoa from "../../components/card-doa";
 export default function Doa() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
@@ -13,7 +15,6 @@ export default function Doa() {
   const [debouncedValue] = useDebounce(search, 2000);
 
   const { data: dataDoa, isPending } = useDataDoa();
-
   const handlePageChange = (page) => {
     if (dataDoa) {
       const sliceData = dataDoa.slice((page - 1) * 10, page * 10);
@@ -65,31 +66,7 @@ export default function Doa() {
       <div className="w-full h-max mt-6 mb-6">
         <div className="w-[90%] h-max mx-auto flex flex-col items-center justify-between  gap-5">
           {data.length > 0 ? (
-            data.map((item, index) => (
-              <div
-                className="w-full h-max border p-2 rounded-xl shadow-xl bg-[#2ed34a2d]"
-                key={index}
-              >
-                <div className="w-full h-max">
-                  <p>
-                    {item.id}. {item.judul}
-                  </p>
-                </div>
-                <div className="w-full h-max flex items-end   flex-col mt-6">
-                  <h1 className="text-[1.5rem] text-yellow-500 font-semibold text-end">
-                    {item.arab}
-                  </h1>
-                  <p className="text-[.8rem] italic text-gray-300 text-end">
-                    {item.latin}
-                  </p>
-                </div>
-                <div className="w-full h-max mt-4">
-                  <p className="text-[.9rem] italic">
-                    &quot;{item.terjemah}.&quot;
-                  </p>
-                </div>
-              </div>
-            ))
+            data.map((item, index) => <CardDoa key={index} items={item} />)
           ) : (
             <SkeletonDoa />
           )}

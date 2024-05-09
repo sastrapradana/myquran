@@ -25,7 +25,6 @@ export default function App() {
   const tanggal = time.getDate().toString().padStart(2, "0");
 
   const { data: jadwalSholat } = useJadwalSholat("2023", bulan);
-
   const getJadwalSholatHariIni = (waktu) => {
     const filterData = jadwalSholat.filter((obj) => obj.tanggal == waktu);
 
@@ -103,7 +102,7 @@ export default function App() {
                   ) : (
                     <span className="h-[20px] rounded-xl w-[100px] border animate-pulse bg-gray-300"></span>
                   )}
-                  <p className="capitalize text-gray-300">
+                  <p className="capitalize text-white font-semibold">
                     {kotaUser ? kotaUser : "medan"}
                   </p>
                 </div>
