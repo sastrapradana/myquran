@@ -39,6 +39,14 @@ export const getCookiesName = (name) => {
   return null;
 };
 
+export const deleteAllCookies = () => {
+  const cookies = Cookies.get();
+
+  Object.keys(cookies).forEach((cookieName) => {
+    Cookies.remove(cookieName);
+  });
+};
+
 export function cariWaktuAkanDatang(waktuSekarang, data) {
   const waktuObj = Object.keys(data[0]).filter((key) => key !== "tanggal");
 

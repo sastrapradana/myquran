@@ -8,7 +8,7 @@ export default function NavLink({ title }) {
   return (
     <div className="w-full h-[80px]  fixed top-0 left-0 z-[100] bg-[rgba(241, 238, 238, 1)] backdrop-blur-lg">
       <div className="w-[90%] h-full mx-auto flex justify-between items-center">
-        <div className="w-maxh-max" onClick={() => navigate("/")}>
+        <div className="w-maxh-max" onClick={() => navigate("/home")}>
           <GoHome size={25} fill="white" />
         </div>
         <div className="w-full h-max text-center ">
