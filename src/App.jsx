@@ -198,7 +198,10 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <div className="w-[45%] h-[170px] border rounded-3xl bg-[#1353b43b] flex flex-col justify-center gap-3 p-3">
+              <div
+                className="w-[45%] h-[170px] border rounded-3xl bg-[#1353b43b] flex flex-col justify-center gap-3 p-3"
+                onClick={() => navigate("/bookmark")}
+              >
                 <img
                   src="/bookmark.png"
                   alt="alquran"

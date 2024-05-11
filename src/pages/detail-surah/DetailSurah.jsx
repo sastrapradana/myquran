@@ -75,7 +75,11 @@ export default function DetailSurah() {
 
   return (
     <div className="w-full min-h-[100vh] max-h-max">
-      <NavDetailSurah namaSurah={data && data.nama} nomorPage={page} />
+      <NavDetailSurah
+        namaSurah={data && data.namaLatin}
+        nomorPage={page}
+        nomorSurah={data && data.nomor}
+      />
       {data ? (
         <div className="w-full h-max pt-[100px]">
           <div className="w-[90%] h-[180px] m-auto ring-1 ring-slate-400 shadow-xl shadow-[#ffffff3d] rounded-2xl relative">
@@ -89,8 +93,8 @@ export default function DetailSurah() {
               <p className="border rounded-full w-[40px] h-[40px] flex justify-center items-center">
                 {data.nomor}
               </p>
-              <h1 className="text-yellow-500 font-semibold text-[1.2rem]">
-                {data.namaLatin}
+              <h1 className="text-yellow-500 font-semibold text-[1.4rem]">
+                {data.nama}
               </h1>
               <p className="-mt-2 text-[.8rem] text-gray-300 ">{data.arti}</p>
               <p className="text-[.9rem] font-semibold">

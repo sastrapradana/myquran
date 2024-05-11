@@ -40,11 +40,8 @@ export const getCookiesName = (name) => {
 };
 
 export const deleteAllCookies = () => {
-  const cookies = Cookies.get();
-
-  Object.keys(cookies).forEach((cookieName) => {
-    Cookies.remove(cookieName);
-  });
+  Cookies.remove("token");
+  Cookies.remove("user");
 };
 
 export function cariWaktuAkanDatang(waktuSekarang, data) {

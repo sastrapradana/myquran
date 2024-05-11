@@ -13,6 +13,7 @@ import WaktuSholat from "./pages/waktu-sholat/waktu-sholat.jsx";
 import Register from "./pages/auth/register.jsx";
 import Login from "./pages/auth/login.jsx";
 import { getCookies } from "./utils/utils.js";
+import Bookmark from "./pages/bookmark/bookmark.jsx";
 
 const queryClient = new QueryClient();
 
@@ -76,7 +77,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             }
           />
 
-          <Route path="/waktu-sholat" element={<WaktuSholat />} />
+          <Route
+            path="/waktu-sholat"
+            element={
+              <PrivatePage>
+                <WaktuSholat />
+              </PrivatePage>
+            }
+          />
+          <Route
+            path="/bookmark"
+            element={
+              <PrivatePage>
+                <Bookmark />
+              </PrivatePage>
+            }
+          />
         </Routes>
       </React.StrictMode>
     </BrowserRouter>

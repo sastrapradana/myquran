@@ -8,3 +8,11 @@ export function useDataSurah() {
     staleTime: 5 * 60 * 1000,
   });
 }
+
+// export function useSurahBookmark() {
+//   return useQuery({
+//     queryKey: ["bookmark"],
+//     queryFn: getAllSurahApi,
+//     staleTime: 5 * 60 * 1000,
+//   });
+// }
