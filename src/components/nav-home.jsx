@@ -1,10 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { deleteAllCookies, getCookies } from "../utils/utils";
 import { supabase } from "../db/config";
-
+import { useState } from "react";
+import { IoLogOutOutline } from "react-icons/io5";
 export default function NavHome() {
   const user = getCookies("user");
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -18,74 +24,33 @@ export default function NavHome() {
 
   const MenuDropdown = () => {
     return (
-      <>
+      <div className="relative">
         <button
-          id="dropdownDefaultButton"
-          data-dropdown-toggle="dropdown"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button"
+          onClick={toggleDropdown}
+          className="flex items-center w-max h-max"
         >
-          Dropdown button{" "}
-          <svg
-            className="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
+          <img
+            src="/berdoa.png"
+            alt="img_profil"
+            loading="lazy"
+            className="w-[40px] h-[40px] rounded-full object-cover border-2 border-white"
+            // onClick={handleSignOut}
+          />
         </button>
-        {/* Dropdown menu */}
-        <div
-          id="dropdown"
-          className="z-[10000000] hidden  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-        >
-          <ul
-            className="py-2 text-sm text-gray-700 dark:text-gray-200"
-            aria-labelledby="dropdownDefaultButton"
-          >
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+        {isOpen && (
+          <div className="absolute right-0 mt-2 w-max bg-zinc-200 text-black rounded-md shadow-lg">
+            <div className="w-max h-max ">
+              <button
+                className="px-4 py-2 text-sm text-black hover:bg-zinc-300 w-max h-max flex gap-1 items-center rounded-md"
+                onClick={handleSignOut}
               >
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Settings
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Earnings
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Sign out
-              </a>
-            </li>
-          </ul>
-        </div>
-      </>
+                <IoLogOutOutline size={25} className="text-red-400" />
+                Log Out
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -98,8 +63,8 @@ export default function NavHome() {
             {user ? user.username : "myQuran"}
           </h1>
         </div>
-        {/* <MenuDropdown /> */}
-        <button className="w-max h-max">
+        <MenuDropdown />
+        {/* <button className="w-max h-max">
           <img
             src="/berdoa.png"
             alt="img_profil"
@@ -107,7 +72,7 @@ export default function NavHome() {
             className="w-[40px] h-[40px] rounded-full object-cover border-2 border-white"
             onClick={handleSignOut}
           />
-        </button>
+        </button> */}
       </div>
     </div>
   );
