@@ -22,7 +22,7 @@ export function PrivatePage({ children }) {
   if (isToken) {
     return children;
   }
-  return <Navigate to="/" replace={true} />;
+  return <Navigate to="/login" replace={true} />;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(

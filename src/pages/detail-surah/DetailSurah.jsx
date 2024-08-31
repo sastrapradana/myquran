@@ -1,35 +1,47 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavDetailSurah from "../../components/nav-detailSurah";
 import { getAllSurahByNomor } from "../../services/useApi";
-import { useEffect, useState } from "react";
-import AudioPlayer from "../../components/audio-player";
+import { useEffect, useRef, useState } from "react";
 import { getCookies } from "../../utils/utils";
-
+import CardSurah from "../../components/card-surah";
+import { useLocation } from "react-router-dom";
+import { CiDesktopMouse2, CiSearch } from "react-icons/ci";
 export default function DetailSurah() {
   const [qory, setQory] = useState("");
   const [keyQory, setKeyQory] = useState("");
   const [urlFull, setUrlFull] = useState("");
   const [data, setData] = useState(null);
+  const [search, setSearch] = useState("");
   const { nomor } = useParams();
 
+  const navigate = useNavigate();
+  const [test, setTest] = useState(false);
   const page = getCookies("nomor");
-
+  const ayatRefs = useRef([]);
+  const { pathname } = useLocation();
   const getDetailSurah = async () => {
     if (!nomor) return;
     const res = await getAllSurahByNomor(nomor);
     if (res.code == 200) {
       setData(res.data);
+      setTest(true);
     }
   };
 
   useEffect(() => {
     getDetailSurah();
-  }, [nomor]);
+    const searchParams = new URLSearchParams(location.search);
+    const ayatIndex = parseInt(searchParams.get("ayat"));
+
+    if (ayatIndex && ayatRefs.current[ayatIndex - 1]) {
+      ayatRefs.current[ayatIndex - 1].scrollIntoView({ behavior: "smooth" });
+    }
+  }, [nomor, location.search, test]);
 
   const SkeletonHeader = () => {
     return (
-      <div className="w-[90%] h-[180px] m-auto ring-1 ring-slate-400 shadow-xl shadow-[#ffffff3d] rounded-2xl relative">
+      <div className="w-[90%] h-[180px] m-auto ring-1 ring-slate-400 shadow-xl shadow-[#ffffff3d] rounded-2xl relative ">
         <div className="w-full h-full animate-pulse absolute top-0 left-0 flex flex-col justify-center items-center gap-1">
           <div className="w-full h-full bg-gray-300 rounded-2xl"></div>
           <div className="w-[40px] h-[40px] bg-gray-300 rounded-full flex justify-center items-center"></div>
@@ -73,15 +85,49 @@ export default function DetailSurah() {
     setKeyQory(key);
   };
 
+  const handleSearch = () => {
+    if (search === "") return;
+    if (search > data.ayat.length)
+      return alert(`Ayat cuman ${data.ayat.length}`);
+    navigate(`${pathname}?ayat=${search}`);
+  };
+
+  const handleTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="w-full min-h-[100vh] max-h-max">
+      <button
+        className="w-max h-max p-2 rounded-xl bg-pink-600 fixed bottom-[20px] right-[20px]"
+        onClick={handleTop}
+        title="Scroll To Top"
+      >
+        <CiDesktopMouse2 size={30} color="white" />
+      </button>
+      <div className="w-full h-max pt-[120px] flex justify-center items-center gap-2">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-[70%] h-max rounded-xl px-3 py-2 text-black"
+          placeholder="Cari Ayat"
+        />
+        <button
+          className="p-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-600"
+          type="submit"
+          onClick={handleSearch}
+        >
+          <CiSearch size={20} color="white" />
+        </button>
+      </div>
       <NavDetailSurah
         namaSurah={data && data.namaLatin}
         nomorPage={page}
         nomorSurah={data && data.nomor}
       />
       {data ? (
-        <div className="w-full h-max pt-[100px]">
+        <div className="w-full h-max pt-[50px]">
           <div className="w-[90%] h-[180px] m-auto ring-1 ring-slate-400 shadow-xl shadow-[#ffffff3d] rounded-2xl relative">
             <img
               src="/bg-detail-surah1.jpeg"
@@ -103,30 +149,14 @@ export default function DetailSurah() {
             </div>
           </div>
           <div className="w-[90%] h-max m-auto mt-6 flex flex-col items-center">
-            <div className="w-full h-max flex justify-center items-center">
-              <img
-                src="/bismillah.png"
-                alt="bismillah"
-                className="w-full h-[100px] object-cover"
-              />
-            </div>
             <div className="w-full h-max flex items-center flex-col gap-3">
-              {qory == "" ? (
-                <audio controls disabled />
-              ) : (
-                <div
-                  className={`w-full h-[50px] flex items-center justify-center rounded-xl `}
-                >
-                  <audio src={urlFull} controls preload="auto" />
-                </div>
-              )}
-              <div className="w-full h-[50px] border rounded-xl">
+              <div className="w-full h-[50px] rounded-xl">
                 <select
                   id="small"
-                  className="block w-full h-full p-2 mb-6 text-sm bg-transparent outline-none"
+                  className="block w-full h-full p-2 mb-6 text-sm bg-black outline-none text-yellow-500 rounded-lg border font-semibold"
                   onChange={handleChange}
                 >
-                  <option selected="" value={""}>
+                  <option disabled value={"null"}>
                     Pilih Qory
                   </option>
                   <option value={"Abdullah-Al-Juhany"}>
@@ -146,30 +176,37 @@ export default function DetailSurah() {
                   </option>
                 </select>
               </div>
+              {qory == "" ? (
+                <audio controls disabled />
+              ) : (
+                <div
+                  className={`w-full h-[50px] flex items-center justify-center rounded-xl `}
+                >
+                  <audio src={urlFull} controls preload="auto" />
+                </div>
+              )}
+            </div>
+            <div className="w-full h-max flex justify-center items-center mt-2">
+              <img
+                src="/bismillah.png"
+                alt="bismillah"
+                className="w-full h-[100px] object-cover"
+              />
             </div>
             <div className="w-full h-max mt-6 flex flex-col items-center justify-center gap-10">
               {data.ayat.map((item, i) => (
-                <div className="w-full h-max flex flex-col gap-2 " key={i}>
-                  <div className="w-full h-max flex justify-between items-center  rounded-lg p-1 bg-[#ffffff31]">
-                    <p className="w-[30px] h-[30px] border border-dashed rounded-full text-white bg-yellow-500 flex justify-center items-center">
-                      {item.nomorAyat}
-                    </p>
-                    {qory != "" && keyQory && (
-                      <AudioPlayer audioSrc={item.audio[keyQory]} />
-                    )}
-                  </div>
-                  <div className="w-full h-max flex items-end   flex-col">
-                    <h1 className="text-[1.5rem] text-yellow-500 font-semibold text-end">
-                      {item.teksArab}
-                    </h1>
-                    <p className="text-[.8rem] italic text-gray-300 text-end">
-                      {item.teksLatin}
-                    </p>
-                  </div>
-                  <div className="w-full h-max">
-                    <p className="text-[.9rem]">{item.teksIndonesia}</p>
-                  </div>
-                </div>
+                <CardSurah
+                  key={i}
+                  ayatRefs={ayatRefs}
+                  index={i}
+                  qory={qory}
+                  keyQory={keyQory}
+                  nomorAyat={item.nomorAyat}
+                  audio={item.audio}
+                  teksArab={item.teksArab}
+                  teksLatin={item.teksLatin}
+                  teksIndonesia={item.teksIndonesia}
+                />
               ))}
             </div>
           </div>
@@ -178,13 +215,6 @@ export default function DetailSurah() {
         <div className="w-full h-max pt-[100px]">
           <SkeletonHeader />
           <div className="w-[90%] h-max m-auto mt-6 flex flex-col items-center">
-            <div className="w-full h-max flex justify-center items-center">
-              <img
-                src="/bismillah.png"
-                alt="bismillah"
-                className="w-full h-[100px] object-cover"
-              />
-            </div>
             <div className="w-full h-max mt-6 flex flex-col items-center justify-center gap-10">
               <SkeletonSurah />
             </div>
