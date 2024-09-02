@@ -11,12 +11,14 @@ import {
 } from "./utils/utils";
 import { useEffect, useState } from "react";
 import { useJadwalSholat } from "./services/useAdzanQuery";
+import { getAllSurahByNomor } from "./services/useApi";
 
 export default function App() {
   const [waktuSholat, setWaktuSholat] = useState(undefined);
+  const [surahDitandai, setSurahDitandai] = useState(undefined);
   const navigate = useNavigate();
 
-  const surahDibaca = getCookies("surah-dibaca");
+  const getCookiesSurahDitandai = getCookies("surah-ditandai");
   const kotaUser = getCookiesName("kota");
 
   const [time] = useRealTime();
@@ -25,6 +27,15 @@ export default function App() {
   const tanggal = time.getDate().toString().padStart(2, "0");
 
   const { data: jadwalSholat } = useJadwalSholat("2023", bulan);
+
+  const getSurahDitandai = async () => {
+    if (!getCookiesSurahDitandai) return;
+    const { nomorSurah } = getCookiesSurahDitandai;
+    const res = await getAllSurahByNomor(nomorSurah);
+    if (res.code == 200) {
+      setSurahDitandai(res.data);
+    }
+  };
   const getJadwalSholatHariIni = (waktu) => {
     const filterData = jadwalSholat.filter((obj) => obj.tanggal == waktu);
 
@@ -39,14 +50,16 @@ export default function App() {
   };
 
   const handleNavigate = () => {
-    if (surahDibaca) {
-      navigate(`/detail-surah/${surahDibaca.nomor}`);
+    if (surahDitandai) {
+      const { nomorSurah, nomorAyat } = getCookiesSurahDitandai;
+      navigate(`/detail-surah/${nomorSurah}?ayat=${nomorAyat}`);
     } else {
       navigate(`/detail-surah/1`);
     }
   };
 
   useEffect(() => {
+    getSurahDitandai();
     if (jadwalSholat) {
       getJadwalSholatHariIni(`2023-${bulan}-${tanggal}`);
     }
@@ -118,14 +131,16 @@ export default function App() {
           >
             <div className="w-max h-max flex flex-col">
               <h1 className="font-semibold text-white">
-                {surahDibaca ? surahDibaca.namaLatin : "Al-Fatihah"}
+                {surahDitandai ? surahDitandai.namaLatin : "Al-Fatihah"}
               </h1>
               <p className="text-[.8rem] text-zinc-400 font-semibold">
-                {surahDibaca ? surahDibaca.nama : "الفاتحة"} |{" "}
-                {surahDibaca ? surahDibaca.jumlahAyat : "7"}
+                {surahDitandai ? surahDitandai.nama : "الفاتحة"} |{" "}
+                {surahDitandai ? surahDitandai.jumlahAyat : "7"}
               </p>
               <p className="text-[.8rem] text-white">
-                {surahDibaca ? "Terakhir dibaca" : "Mulai membaca"}
+                {getCookiesSurahDitandai?.nomorAyat
+                  ? `Ayat ${getCookiesSurahDitandai.nomorAyat}`
+                  : "Mulai membaca"}
               </p>
             </div>
             <div className="w-max h-max">

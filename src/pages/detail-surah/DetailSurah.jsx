@@ -201,6 +201,7 @@ export default function DetailSurah() {
                   index={i}
                   qory={qory}
                   keyQory={keyQory}
+                  nomorSurah={data.nomor}
                   nomorAyat={item.nomorAyat}
                   audio={item.audio}
                   teksArab={item.teksArab}

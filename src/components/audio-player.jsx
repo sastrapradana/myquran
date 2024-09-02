@@ -20,7 +20,7 @@ export default function AudioPlayer({ audioSrc }) {
   };
 
   return (
-    <div>
+    <div className=" h-max pt-1">
       <button onClick={togglePlayPause}>
         {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
       </button>
